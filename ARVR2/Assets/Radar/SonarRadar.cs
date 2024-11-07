@@ -1,6 +1,6 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class SonarRadar : MonoBehaviour
 {
@@ -61,25 +61,24 @@ public class SonarRadar : MonoBehaviour
             Vector3 directionToTarget = target.transform.position - transform.position;
             float angleToTarget = Vector3.Angle(transform.forward, directionToTarget);
 
-            // Check if the target is within the half-circle angle
+            // Check if the target is within the half-circle angle (180 degrees total)
             if (angleToTarget <= detectionAngle / 2f)
             {
                 // Convert the world position to radar position
                 Vector3 radarPos = RadarPosition(target.transform.position);
 
-                // Check if radar line is passing over the target
+                // Check if radar line is passing over the target (i.e., within the sweep)
                 if (IsTargetInRadarSweep(target.transform.position))
                 {
                     // Create a dot on the radar if it is within the sweep
                     Dot dot = Instantiate(dotPrefab, radarDisplay).GetComponent<Dot>();
-                    dot.Initialize(radarPos);
+                    dot.Initialize(radarPos); // Set the dot's position on the radar
                     activeDots.Add(dot);
                 }
             }
         }
     }
 
-    // Check if the radar line is currently sweeping over the target
     bool IsTargetInRadarSweep(Vector3 targetPos)
     {
         Vector3 directionToTarget = targetPos - transform.position;
@@ -90,18 +89,29 @@ public class SonarRadar : MonoBehaviour
         return angleToTarget <= detectionAngle / 2f && Mathf.Abs(currentAngle - angleToTarget) < sweepSpeed * Time.deltaTime;
     }
 
+    void FadeOutDots()
+    {
+        foreach (var dot in activeDots)
+        {
+            dot.Fade(); // Fade out each dot
+        }
+
+        // Remove dots that are fully faded
+        activeDots.RemoveAll(dot => dot.IsFaded());
+    }
+
     // Convert a world position to the radar's local position on the UI
     Vector3 RadarPosition(Vector3 targetPos)
     {
         // Calculate the direction and distance from the submarine to the target
         Vector3 offset = targetPos - transform.position;
-        float distance = Mathf.Clamp(offset.magnitude, 0, radarRange);
+        float distance = Mathf.Clamp(offset.magnitude, 0, radarRange); // Clamp the distance to the radar range
 
         // Calculate the angle between the forward direction of the submarine and the target
         float angle = Mathf.Atan2(offset.z, offset.x) * Mathf.Rad2Deg;
 
-        // Adjust the angle to fit within the radar's 180-degree field
-        float radarAngle = Mathf.Clamp(angle, -detectionAngle / 2, detectionAngle / 2);
+        // Adjust the angle to fit within the radar's 180-degree field (use a full range from -90° to +90°)
+        float radarAngle = Mathf.Repeat(angle + 90f, 360f) - 90f;  // Ensures angles map to [-90, 90] range
 
         // Map the distance to the radar's range and calculate position relative to bottom center
         float radius = (distance / radarRange) * (radarDisplay.rect.height); // Scale based on radar range
@@ -115,17 +125,5 @@ public class SonarRadar : MonoBehaviour
 
         // Return the radar position as a Vector3 for UI anchoring
         return new Vector3(x, y, 0);
-    }
-
-    // Fade out dots gradually
-    void FadeOutDots()
-    {
-        foreach (var dot in activeDots)
-        {
-            dot.Fade();
-        }
-
-        // Remove dots that are fully faded
-        activeDots.RemoveAll(dot => dot.IsFaded());
     }
 }

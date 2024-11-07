@@ -3,29 +3,48 @@ using UnityEngine.UI;
 
 public class Dot : MonoBehaviour
 {
-    private Image dotImage;
-    private float fadeDuration = 3f; // Time to fade out (seconds)
-    private float fadeTime = 0f;
+    private RectTransform rectTransform;
+    private Image dotImage; // To access the Image component for fading
+    private float fadeSpeed = 1f; // Speed at which the dot fades out
+    private float alphaValue = 1f; // Initial alpha value (fully visible)
 
-    // Initialize the dot's position and set its color to fully visible
-    public void Initialize(Vector3 position)
+    private void Awake()
     {
-        dotImage = GetComponent<Image>();
-        transform.localPosition = position; // Set the position of the dot
-        dotImage.color = new Color(dotImage.color.r, dotImage.color.g, dotImage.color.b, 1); // Fully visible initially
+        rectTransform = GetComponent<RectTransform>();
+        dotImage = GetComponent<Image>(); // Get the Image component
     }
 
-    // Gradually fade out the dot
-    public void Fade()
+    private void Update()
     {
-        fadeTime += Time.deltaTime;
-        float alpha = Mathf.Lerp(1f, 0f, fadeTime / fadeDuration);
-        dotImage.color = new Color(dotImage.color.r, dotImage.color.g, dotImage.color.b, alpha);
+        // Fade the dot by decreasing its alpha value
+        if (alphaValue > 0)
+        {
+            alphaValue -= fadeSpeed * Time.deltaTime;
+            Color dotColor = dotImage.color;
+            dotColor.a = alphaValue; // Apply the fade effect
+            dotImage.color = dotColor;
+        }
+        else
+        {
+            Destroy(gameObject); // Remove the dot once it's fully faded
+        }
     }
 
-    // Check if the dot is fully faded
+    // Initialize the dot with a position on the radar
+    public void Initialize(Vector3 radarPosition)
+    {
+        rectTransform.localPosition = radarPosition; // Set the position on the radar
+    }
+
+    // Check if the dot has fully faded
     public bool IsFaded()
     {
-        return dotImage.color.a <= 0f;
+        return alphaValue <= 0;
+    }
+
+    // A method to manually control the fading (if needed)
+    public void Fade()
+    {
+        alphaValue -= fadeSpeed * Time.deltaTime;
     }
 }
