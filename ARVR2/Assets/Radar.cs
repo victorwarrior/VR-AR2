@@ -4,49 +4,50 @@ using UnityEngine.UI;
 
 public class Radar : MonoBehaviour
 {
-    public Transform player;                  // Reference to the player’s transform (U-boat)
-    public float radarRange = 100.0f;         // Maximum range for the radar (distance in world units)
-    public RectTransform radarPanel;          // Reference to the Radar UI panel (should be a square/circle image)
-    public GameObject radarDotPrefab;         // Prefab for radar dots
-    public float radarScale = 1.0f;           // Scale factor for the radar display
-    public RectTransform sweeper;             // Reference to the sweeper (Radar sweep line/image)
-    public float sweepSpeed = 60.0f;          // Speed of the radar sweep in degrees per second
+    public Transform player;
+    public float radarRange = 100.0f;
+    public RectTransform radarPanel;
+    public GameObject radarDotPrefab;
+    public float radarScale = 1.0f;
+    public RectTransform sweeper;
+    public float sweepSpeed = 60.0f;
     public Image sweeperImage;
-    private List<GameObject> radarDots = new List<GameObject>(); // Holds instantiated radar dots
+
+    private Dictionary<GameObject, RadarDot> enemyDots = new Dictionary<GameObject, RadarDot>();
 
     void Update()
     {
-        // Clear existing radar dots to refresh positions
-        foreach (var dot in radarDots)
-            Destroy(dot);
-        radarDots.Clear();
-
-        // Find all objects tagged as "Enemy" (make sure enemy ships have this tag)
+        // Get all enemies
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
 
+        // Update or create radar dots for each enemy
         foreach (GameObject enemy in enemies)
         {
             float distanceToEnemy = Vector3.Distance(player.position, enemy.transform.position);
 
             // Skip enemies that are out of radar range
             if (distanceToEnemy > radarRange)
+            {
+                if (enemyDots.ContainsKey(enemy))
+                {
+                    Destroy(enemyDots[enemy].gameObject);
+                    enemyDots.Remove(enemy);
+                }
                 continue;
+            }
 
-            // Create a new radar dot
-            GameObject radarDot = Instantiate(radarDotPrefab, radarPanel);
-            radarDots.Add(radarDot);
+            if (!enemyDots.ContainsKey(enemy))
+            {
+                GameObject radarDot = Instantiate(radarDotPrefab, radarPanel);
+                RadarDot dot = radarDot.GetComponent<RadarDot>();
+                dot.InitializeDot();
+                enemyDots[enemy] = dot;
+            }
 
-            // Calculate enemy position relative to the player
             Vector3 relativePos = enemy.transform.position - player.position;
-
-            // Calculate the position on the radar using the player's forward as the radar's "up"
             Vector3 radarPos = new Vector3(relativePos.x, 0, relativePos.z) * radarScale;
-
-            // Rotate according to player rotation
             radarPos = Quaternion.Euler(0, -player.eulerAngles.y, 0) * radarPos;
-
-            // Convert to UI space
-            radarDot.GetComponent<RectTransform>().anchoredPosition = new Vector2(radarPos.x, radarPos.z);
+            enemyDots[enemy].GetComponent<RectTransform>().anchoredPosition = new Vector2(radarPos.x, radarPos.z);
         }
 
         // Rotate the sweeper
@@ -55,15 +56,9 @@ public class Radar : MonoBehaviour
 
     void RotateSweeper()
     {
-        // Rotate the sweeper object to create the sweeping effect
         sweeperImage.transform.Rotate(0, 0, sweepSpeed * Time.deltaTime);
-
-        // Make the sweeper fade out at the edges of its sweep (Optional)
-        float alpha = Mathf.PingPong(Time.time * 0.5f, 0.5f) + 0.5f;
-
-        // Set the new alpha value while keeping the RGB values intact
         Color newColor = sweeperImage.color;
-        newColor.a = alpha;  // Modify the alpha (opacity)
-        sweeperImage.color = newColor;  // Apply the new color with updated alpha
+        newColor.a = Mathf.PingPong(Time.time * 0.5f, 0.5f) + 0.5f;
+        sweeperImage.color = newColor;
     }
 }
