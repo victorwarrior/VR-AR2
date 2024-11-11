@@ -9,7 +9,9 @@ public class Radar : MonoBehaviour
     public RectTransform radarPanel;          // Reference to the Radar UI panel (should be a square/circle image)
     public GameObject radarDotPrefab;         // Prefab for radar dots
     public float radarScale = 1.0f;           // Scale factor for the radar display
-
+    public RectTransform sweeper;             // Reference to the sweeper (Radar sweep line/image)
+    public float sweepSpeed = 60.0f;          // Speed of the radar sweep in degrees per second
+    public Image sweeperImage;
     private List<GameObject> radarDots = new List<GameObject>(); // Holds instantiated radar dots
 
     void Update()
@@ -46,5 +48,22 @@ public class Radar : MonoBehaviour
             // Convert to UI space
             radarDot.GetComponent<RectTransform>().anchoredPosition = new Vector2(radarPos.x, radarPos.z);
         }
+
+        // Rotate the sweeper
+        RotateSweeper();
+    }
+
+    void RotateSweeper()
+    {
+        // Rotate the sweeper object to create the sweeping effect
+        sweeperImage.transform.Rotate(0, 0, sweepSpeed * Time.deltaTime);
+
+        // Make the sweeper fade out at the edges of its sweep (Optional)
+        float alpha = Mathf.PingPong(Time.time * 0.5f, 0.5f) + 0.5f;
+
+        // Set the new alpha value while keeping the RGB values intact
+        Color newColor = sweeperImage.color;
+        newColor.a = alpha;  // Modify the alpha (opacity)
+        sweeperImage.color = newColor;  // Apply the new color with updated alpha
     }
 }
