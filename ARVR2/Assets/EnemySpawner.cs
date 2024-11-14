@@ -4,8 +4,8 @@ public class EnemySpawner : MonoBehaviour
 {
     public GameObject enemyShipPrefab;   // Prefab for the enemy ship
     public float spawnInterval = 5f;     // Time interval between spawns
-    public float radarRange = 100f;      // Minimum distance from the player to spawn enemies outside of
-    public float spawnRadius = 200f;     // Maximum distance from the player for spawning enemies
+    public float minSpawnZ = 10f;        // Minimum Z position for spawning in front of the player
+    public float maxSpawnDistance = 100f; // Maximum distance for spawning enemies in the forward direction
     public Transform player;             // Reference to the player's transform (submarine)
     public float offsetRange = 10f;      // The range of offset for the ship to move towards
     public float spawnAngleRange = 90f;  // Half the spawn area angle, making it 180 degrees total
@@ -34,14 +34,17 @@ public class EnemySpawner : MonoBehaviour
         // Generate a random angle within the forward 180 degrees of the submarine's direction along the Y-axis
         float angle = Random.Range(-spawnAngleRange, spawnAngleRange); // Angle range is between -90 and 90 degrees
 
-        // Generate a random distance within the donut shape (between radar range and spawn radius)
-        float distance = Random.Range(radarRange, spawnRadius);
+        // Generate a random distance within the specified range in front of the player
+        float distance = Random.Range(minSpawnZ, maxSpawnDistance);
 
-        // Calculate the spawn position based on the random angle (in the Y-axis) and the distance from the player
+        // Calculate the spawn position based on the distance and angle in front of the player
         Vector3 spawnPosition = player.position + player.forward * distance;
 
-        // Apply the rotation around the Y-axis to ensure the spawn point is within the 180° arc
+        // Apply rotation around the Y-axis for random spread within the 180° arc
         spawnPosition = Quaternion.Euler(0, angle, 0) * (spawnPosition - player.position) + player.position;
+
+        // Ensure that the Z position is at least the minimum spawn Z distance in front of the player
+        spawnPosition.z = Mathf.Max(spawnPosition.z, player.position.z + minSpawnZ);
 
         // Add a random offset to the target position (near the player)
         Vector3 offset = new Vector3(Random.Range(-offsetRange, offsetRange), 0, Random.Range(-offsetRange, offsetRange));
