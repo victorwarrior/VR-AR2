@@ -57,7 +57,6 @@ public class RadarDot : MonoBehaviour
             Color color = dotImage.color;
             color.a = alpha;
             dotImage.color = color;
-            Debug.Log("Dot alpha set to: " + alpha);
         }
     }
 }
