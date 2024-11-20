@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,6 +14,9 @@ public class Radar : MonoBehaviour
     public float sweepSpeed = 60.0f;
     public Image sweeperImage;
 
+
+
+
     private Dictionary<GameObject, RadarDot> enemyDots = new Dictionary<GameObject, RadarDot>();
 
     void Update()
@@ -21,6 +25,8 @@ public class Radar : MonoBehaviour
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
 
         // Update or create radar dots for each enemy
+        GameManager.Instance.lowestDistanceEnemy = float.PositiveInfinity;
+
         foreach (GameObject enemy in enemies)
         {
             float distanceToEnemy = Vector3.Distance(player.position, enemy.transform.position);
@@ -46,6 +52,14 @@ public class Radar : MonoBehaviour
 
             Vector3 relativePos = enemy.transform.position - player.position;
             Vector3 radarPos = new Vector3(relativePos.x, 0, relativePos.z) * radarScale;
+
+            float distance = Mathf.RoundToInt(radarPos.magnitude);
+
+            if (distance < GameManager.Instance.lowestDistanceEnemy) {
+                GameManager.Instance.lowestDistanceEnemy = distance;
+            }
+
+
             radarPos = Quaternion.Euler(0, -player.eulerAngles.y, 0) * radarPos;
             enemyDots[enemy].GetComponent<RectTransform>().anchoredPosition = new Vector2(radarPos.x, radarPos.z);
         }
