@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class EnemySpawner : MonoBehaviour
 {
@@ -9,8 +10,11 @@ public class EnemySpawner : MonoBehaviour
     public Transform player;             // Reference to the player's transform (submarine)
     public float offsetRange = 10f;      // The range of offset for the ship to move towards
     public float spawnAngleRange = 90f;  // Half the spawn area angle, making it 180 degrees total
+    public float waterHeight = 0f;       // The water surface height in the game
+    public float minSpawnDistanceBetweenShips = 20f; // Minimum distance between spawned ships
 
     private float spawnTimer;
+    private List<Vector3> recentSpawnPositions = new List<Vector3>(); // Store recent spawn positions
 
     private void Start()
     {
@@ -31,20 +35,42 @@ public class EnemySpawner : MonoBehaviour
 
     private void SpawnEnemyShip()
     {
-        // Generate a random angle within the forward 180 degrees of the submarine's direction along the Y-axis
-        float angle = Random.Range(-spawnAngleRange, spawnAngleRange); // Angle range is between -90 and 90 degrees
+        Vector3 spawnPosition;
+        int attempts = 0;
 
-        // Generate a random distance within the specified range in front of the player
-        float distance = Random.Range(minSpawnZ, maxSpawnDistance);
+        // Try to find a valid spawn position (prevent overlaps)
+        do
+        {
+            // Generate a random angle within the forward 180 degrees of the submarine's direction along the Y-axis
+            float angle = Random.Range(-spawnAngleRange, spawnAngleRange);
 
-        // Calculate the spawn position based on the distance and angle in front of the player
-        Vector3 spawnPosition = player.position + player.forward * distance;
+            // Generate a random distance within the specified range in front of the player
+            float distance = Random.Range(minSpawnZ, maxSpawnDistance);
 
-        // Apply rotation around the Y-axis for random spread within the 180° arc
-        spawnPosition = Quaternion.Euler(0, angle, 0) * (spawnPosition - player.position) + player.position;
+            // Calculate the spawn position based on the distance and angle in front of the player
+            spawnPosition = player.position + player.forward * distance;
 
-        // Ensure that the Z position is at least the minimum spawn Z distance in front of the player
-        spawnPosition.z = Mathf.Max(spawnPosition.z, player.position.z + minSpawnZ);
+            // Apply rotation around the Y-axis for random spread within the 180° arc
+            spawnPosition = Quaternion.Euler(0, angle, 0) * (spawnPosition - player.position) + player.position;
+
+            // Set the spawn position's Y-coordinate to the water surface height
+            spawnPosition.y = waterHeight;
+
+            attempts++;
+        } while (!IsValidSpawnPosition(spawnPosition) && attempts < 10);
+
+        if (attempts >= 10)
+        {
+            Debug.LogWarning("Failed to find a valid spawn position after 10 attempts.");
+            return;
+        }
+
+        // Add the new spawn position to the list of recent positions
+        recentSpawnPositions.Add(spawnPosition);
+        if (recentSpawnPositions.Count > 10) // Keep only the last 10 positions
+        {
+            recentSpawnPositions.RemoveAt(0);
+        }
 
         // Add a random offset to the target position (near the player)
         Vector3 offset = new Vector3(Random.Range(-offsetRange, offsetRange), 0, Random.Range(-offsetRange, offsetRange));
@@ -58,5 +84,17 @@ public class EnemySpawner : MonoBehaviour
         // Set the ship's movement direction toward the adjusted target position (with offset)
         Vector3 moveDirection = (targetPosition - spawnPosition).normalized;
         enemyShip.GetComponent<EnemyMovement>().SetDirection(moveDirection);
+    }
+
+    private bool IsValidSpawnPosition(Vector3 position)
+    {
+        foreach (Vector3 recentPosition in recentSpawnPositions)
+        {
+            if (Vector3.Distance(position, recentPosition) < minSpawnDistanceBetweenShips)
+            {
+                return false; // Too close to a recently spawned ship
+            }
+        }
+        return true;
     }
 }

@@ -98,6 +98,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 5
+  waterHeight: 10
 --- !u!65 &1064097395115294436
 BoxCollider:
   m_ObjectHideFlags: 0
