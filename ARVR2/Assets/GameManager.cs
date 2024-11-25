@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
     public float lowestDistanceEnemy = float.PositiveInfinity;
 
 
+
     private void Awake()
     {
         // Ensure singleton pattern

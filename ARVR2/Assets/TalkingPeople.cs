@@ -6,16 +6,22 @@ public class TalkingPeople : MonoBehaviour
     // Reference to the Animator component
     private Animator animator;
     public float delayBetweenTalking = 30;
+    public AudioSource whispers;
+    public AudioSource shush;
 
     private bool playerForcedIdle = false; // Tracks if the player has forced the character to idle
+    private float volumeDecay = 0.002f;
 
     void Start()
     {
         // Get the Animator component attached to the GameObject
         animator = GetComponent<Animator>();
-
+        
         // Start the character in the talking state
         animator.SetBool("Talking", true);
+        
+        whispers.Play();
+        whispers.loop = true;
     }
 
     void Update()
@@ -25,6 +31,13 @@ public class TalkingPeople : MonoBehaviour
         {
             //Ændre til SHHHHH fra player
             GoIdle();
+            if (shush.isPlaying == false) shush.Play();
+        }
+
+        if (playerForcedIdle == true && whispers.volume > 0.0f) {
+            whispers.volume -= volumeDecay;
+        } else if (playerForcedIdle == false && whispers.volume < 1.0f) {
+            whispers.volume += volumeDecay;
         }
     }
 
@@ -45,7 +58,6 @@ public class TalkingPeople : MonoBehaviour
     private IEnumerator ResumeTalkingAfterDelay()
     {
         // Wait for a random amount of time (20-30 seconds)
-        
         yield return new WaitForSeconds(delayBetweenTalking);
 
         // Resume talking state
