@@ -7,6 +7,9 @@ public class GameManager : MonoBehaviour
 
     public float lowestDistanceEnemy = float.PositiveInfinity;
 
+    public float soundLvlFromPlayer;
+    public float pot_Speed_Value;
+
 
 
     private void Awake()
