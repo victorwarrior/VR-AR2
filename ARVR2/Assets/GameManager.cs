@@ -7,8 +7,11 @@ public class GameManager : MonoBehaviour
 
     public float lowestDistanceEnemy = float.PositiveInfinity;
 
-    public float soundLvlFromPlayer;
-    public float pot_Speed_Value;
+    public int soundLvlFromPlayer;
+    public int pot_Speed_Value;
+    public int button_1;
+    public int button_2;
+    public int button_3;
 
 
 

@@ -39,28 +39,25 @@ public class SampleUserPolling_JustRead : MonoBehaviour
         else
             Debug.Log(message);
 
-        try
-        {
+ 
             string[] parts = message.Split('/');
-            if (parts.Length == 2)
-            {
-                int int1 = int.Parse(parts[0]);
-                int int2 = int.Parse(parts[1]);
 
-                GameManager.Instance.pot_Speed_Value = int1;
-                GameManager.Instance.soundLvlFromPlayer = int2;
+            int int1 = int.Parse(parts[0]);
+            int int2 = int.Parse(parts[1]);
+            int int3 = int.Parse(parts[2]);
+            int int4 = int.Parse(parts[3]);
+            int int5 = int.Parse(parts[4]);
 
 
-            }
-            else
-            {
-                Debug.LogWarning("Message format is incorrect. Expected format: 'number/number'");
-            }
-        }
-        catch (FormatException ex)
-        {
-            Debug.LogError($"Error parsing message: {ex.Message}");
-        }
+            GameManager.Instance.pot_Speed_Value = int1;
+            GameManager.Instance.soundLvlFromPlayer = int2;
+            GameManager.Instance.button_1 = int3;
+            GameManager.Instance.button_2 = int4;
+            GameManager.Instance.button_3 = int5;
+
+
+
+
 
     }
 }
