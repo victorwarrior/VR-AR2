@@ -5414,11 +5414,11 @@ Transform:
   m_GameObject: {fileID: 261345933}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 7.2431364, y: 13.925341, z: 0.351}
+  m_LocalPosition: {x: 0, y: 1, z: -8.352795}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1444328379}
+  m_Father: {fileID: 560837292}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &266434743
 GameObject:
@@ -6391,6 +6391,7 @@ GameObject:
   - component: {fileID: 560837292}
   - component: {fileID: 560837289}
   - component: {fileID: 560837293}
+  - component: {fileID: 560837294}
   m_Layer: 0
   m_Name: Uboat
   m_TagString: Untagged
@@ -6432,7 +6433,11 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 261345936}
+  - {fileID: 1313008788}
   - {fileID: 636134485}
+  - {fileID: 754988460}
+  - {fileID: 1958750471}
   m_Father: {fileID: 1444328379}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &560837293
@@ -6455,6 +6460,22 @@ MonoBehaviour:
   sweeper: {fileID: 1693215013}
   sweepSpeed: 90
   sweeperImage: {fileID: 1693215014}
+--- !u!114 &560837294
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 560837287}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b16c4d1d50215554687c7b72ad948d86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lightSource: {fileID: 754988459}
+  radioAudio: {fileID: 1958750470}
+  radar: {fileID: 1313008784}
+  uBoat: {fileID: 560837287}
 --- !u!1 &636134484
 GameObject:
   m_ObjectHideFlags: 0
@@ -6775,11 +6796,44 @@ Transform:
   m_GameObject: {fileID: 749023229}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 4.523136, y: 14.94534, z: 4.233795}
+  m_LocalPosition: {x: -2.7200003, y: 2.0199995, z: -4.4699993}
   m_LocalScale: {x: 1, y: 1, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1444328379}
+  m_Father: {fileID: 754988460}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &754988459
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 754988460}
+  m_Layer: 0
+  m_Name: Light
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &754988460
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 754988459}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1775410183}
+  - {fileID: 749023231}
+  m_Father: {fileID: 560837292}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &764543509 stripped
 Transform:
@@ -8547,17 +8601,17 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1313008784}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 8.7037945}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.011523506, y: 0.011523506, z: 0.011523506}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1253851218}
   - {fileID: 1693215013}
-  m_Father: {fileID: 1444328379}
+  m_Father: {fileID: 560837292}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 7.2431364, y: 12.97534}
+  m_AnchoredPosition: {x: 0, y: 0.05000019}
   m_SizeDelta: {x: 1920, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &1326014005
@@ -8893,11 +8947,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 261345936}
-  - {fileID: 1313008788}
   - {fileID: 560837292}
-  - {fileID: 1775410183}
-  - {fileID: 749023231}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1444570930
@@ -9602,11 +9652,11 @@ Transform:
   m_GameObject: {fileID: 1775410181}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 10.503137, y: 14.94534, z: 4.233795}
+  m_LocalPosition: {x: 3.2600002, y: 2.0199995, z: -4.4699993}
   m_LocalScale: {x: 1, y: 1, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1444328379}
+  m_Father: {fileID: 754988460}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1783873761
 GameObject:
@@ -9639,6 +9689,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lowestDistanceEnemy: Infinity
+  soundLvlFromPlayer: 0
+  pot_Speed_Value: 0
+  button_1: 0
+  button_2: 0
+  button_3: 0
 --- !u!4 &1783873763
 Transform:
   m_ObjectHideFlags: 0
@@ -9878,6 +9933,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4745712697277102, guid: fa2bc414ff40df84e980e1f63c2491f4, type: 3}
   m_PrefabInstance: {fileID: 1956960031}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1958750470
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1958750471}
+  m_Layer: 0
+  m_Name: Radio
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1958750471
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1958750470}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 560837292}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2019280954
 GameObject:
   m_ObjectHideFlags: 0
