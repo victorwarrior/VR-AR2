@@ -13,7 +13,7 @@ unsigned long lastDebounceTime3 = 0;
 
 void setup() {
   Serial.begin(9600);        
-  pinMode(7, INPUT);         
+  pinMode(4, INPUT);         
   pinMode(8, INPUT_PULLUP);  
   pinMode(9, INPUT_PULLUP);  
   pinMode(10, INPUT_PULLUP); 
@@ -50,7 +50,7 @@ void loop() {
   lastButtonState3 = button3Value;
 
   int sensorValue = analogRead(A0);  
-  int audioValue = digitalRead(7);    
+  int audioValue = digitalRead(4);    
 
   Serial.print(sensorValue);
   Serial.print("/");

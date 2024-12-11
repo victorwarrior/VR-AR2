@@ -26,8 +26,17 @@ public class TalkingPeople : MonoBehaviour
 
     void Update()
     {
+
+
         // Check for player input (example: Space key)
-        if (Input.GetKeyDown(KeyCode.Space))
+        float yRotation = GameManager.Instance.playerCameraGameobject.transform.eulerAngles.y;
+
+        if (yRotation > 180f)
+        {
+            yRotation -= 360f;
+        }
+
+        if (GameManager.Instance.soundLvlFromPlayer == 1 && yRotation <= -140f && yRotation >= -220f)
         {
             //Ændre til SHHHHH fra player
             GoIdle();
