@@ -5,7 +5,7 @@ using UnityEngine;
 public class Uboat : MonoBehaviour
 {
     public GameObject lightSource;
-    public GameObject radioAudio;
+    public AudioSource radioAudio;
     public GameObject radar;
     public GameObject uBoat;
 
@@ -64,15 +64,21 @@ public class Uboat : MonoBehaviour
         {
             if (state == 1)
             {
-                radioAudio.SetActive(true);
+                if (!radioAudio.isPlaying) // Check if the audio is already playing
+                {
+                    radioAudio.Play();
+                }
             }
             else if (state == 0)
             {
-                radioAudio.SetActive(false);
+                if (radioAudio.isPlaying) // Optional: Check if the audio is playing before pausing
+                {
+                    radioAudio.Pause();
+                }
             }
         }
-
     }
+
 
     public void TurnOffOnRadar(int state)
     {
