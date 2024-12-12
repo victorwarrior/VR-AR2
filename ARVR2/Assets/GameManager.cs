@@ -7,6 +7,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
+    public Uboat uboat;
+
     public float lowestDistanceEnemy = float.PositiveInfinity;
 
     public int soundLvlFromPlayer;
@@ -18,6 +20,7 @@ public class GameManager : MonoBehaviour
     public int button_3;
 
     public int[] lvlTresholds = {100, 75,50,25,10};
+    public int lvlWinRange = 100;
 
 
     private void OnEnable()
@@ -35,6 +38,7 @@ public class GameManager : MonoBehaviour
 
         if (scene.name == "MainScene")
         {
+            uboat = FindFirstObjectByType<Uboat>();
             playerCameraGameobject = FindFirstObjectByType<Camera>();
         }
     }
@@ -71,7 +75,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (SceneManager.GetActiveScene().name == "LostScene")
+        if (SceneManager.GetActiveScene().name == "LostScene" || SceneManager.GetActiveScene().name == "WinScene")
         {
             if (DetectButtonStateChange() == true)
             {
@@ -145,5 +149,14 @@ public class GameManager : MonoBehaviour
                     break;
             }
         }
+
+        if(uboat.gameObject.transform.position.z >= lvlWinRange)
+        {
+            SceneManager.LoadScene("WinScene");
+        }
+
+
     }
+
+
 }

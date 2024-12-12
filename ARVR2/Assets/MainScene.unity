@@ -11208,6 +11208,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 543fe960fa6944f46afa935789b9487f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uboat: {fileID: 0}
   lowestDistanceEnemy: Infinity
   soundLvlFromPlayer: 0
   playerCameraGameobject: {fileID: 272612731}
@@ -11216,6 +11217,7 @@ MonoBehaviour:
   button_2: 0
   button_3: 0
   lvlTresholds: 640000004b00000032000000190000000a000000
+  lvlWinRange: 100
 --- !u!4 &1783873763
 Transform:
   m_ObjectHideFlags: 0
