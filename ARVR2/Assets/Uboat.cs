@@ -11,6 +11,11 @@ public class Uboat : MonoBehaviour
 
     public Radio radio;
 
+    // Variables for movement
+    private float currentSpeed = 0f;
+    private float targetSpeed = 0f;
+    private float speedSmoothTime = 0.5f; // Smooth transition time for speed
+    private float velocity = 0f; // Used for smoothing
 
     private void Update()
     {
@@ -41,7 +46,7 @@ public class Uboat : MonoBehaviour
             TurnOffOnRadar(0);
         }
 
-        MoveFowardUboat(GameManager.Instance.pot_Speed_Value);
+        MoveFowardUboat(GameManager.Instance.pot_Speed_Value_Converted);
     }
 
     public void TurnOffOnLight(int state)
@@ -103,8 +108,14 @@ public class Uboat : MonoBehaviour
 
     public void MoveFowardUboat(int speed)
     {
-        float moveSpeed = Mathf.Lerp(0f, 10f, speed / 1023f); // Normalize speed and scale it to a max value (e.g., 10 units per second)
-        uBoat.transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
+        // Calculate the target speed based on the converted pot value
+        targetSpeed = Mathf.Lerp(0f, 10f, speed / 5f); // Map 0-5 to 0-10 (adjust as needed)
+
+        // Smoothly transition to the target speed using SmoothDamp
+        currentSpeed = Mathf.SmoothDamp(currentSpeed, targetSpeed, ref velocity, speedSmoothTime);
+
+        // Move the Uboat in the forward direction based on smoothed speed
+        uBoat.transform.Translate(Vector3.forward * currentSpeed * Time.deltaTime);
     }
 
 }

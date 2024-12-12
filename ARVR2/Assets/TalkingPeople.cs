@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class TalkingPeople : MonoBehaviour
 {
-    // Reference to the Animator component
     private Animator animator;
     public float delayBetweenTalking = 30;
     public AudioSource whispers;
@@ -34,7 +33,7 @@ public class TalkingPeople : MonoBehaviour
                 yRotation -= 360f;
             }
 
-            if (GameManager.Instance.soundLvlFromPlayer == 1 && yRotation <= -140f && yRotation >= -220f)
+            if (GameManager.Instance.soundLvlFromPlayer == 1) //&& yRotation <= -140f && yRotation >= -220f
             {
                 //Ændre til SHHHHH fra player
                 GoIdle();
@@ -59,6 +58,7 @@ public class TalkingPeople : MonoBehaviour
     {
         if (!playerForcedIdle)
         {
+            GameManager.Instance.talkingPeople = 0;
             playerForcedIdle = true; // Set the idle flag
             animator.SetBool("Talking", false); // Switch to idle animation
 
@@ -74,6 +74,7 @@ public class TalkingPeople : MonoBehaviour
         yield return new WaitForSeconds(delayBetweenTalking);
 
         // Resume talking state
+        GameManager.Instance.talkingPeople = 1;
         playerForcedIdle = false;
         animator.SetBool("Talking", true);
     }

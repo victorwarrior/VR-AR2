@@ -1,5 +1,7 @@
 using UnityEngine.SceneManagement;
 using UnityEngine;
+using UnityEngine.UI;
+using static System.Collections.Specialized.BitVector32;
 
 public class GameManager : MonoBehaviour
 {
@@ -7,6 +9,7 @@ public class GameManager : MonoBehaviour
 
     [HideInInspector]
     public Uboat uboat;
+    public EnemySpawner spawner;
 
     public float lowestDistanceEnemy = float.PositiveInfinity;
 
@@ -14,11 +17,17 @@ public class GameManager : MonoBehaviour
     public Camera playerCameraGameobject;
 
     public int pot_Speed_Value;
+    public int pot_Speed_Value_Converted;
+    private Slider speedSlider;
+    private Text speedSliderText;
+
     public int button_1;
     public int button_2;
     public int button_3;
+    public int talkingPeople;
 
     public int[] lvlTresholds = { 100, 75, 50, 25, 10 };
+    public int[] potLvlTresholds = { 1, 2, 3, 4, 5};
     public int lvlWinRange = 100;
 
     public AudioSource backgroundMusic;
@@ -46,6 +55,9 @@ public class GameManager : MonoBehaviour
         if (scene.name == "MainScene")
         {
             uboat = FindFirstObjectByType<Uboat>();
+            spawner.player = uboat.transform;
+            speedSlider = GameObject.Find("SpeedSlider").GetComponent<Slider>();
+            speedSliderText = GameObject.Find("SpeedSliderText").GetComponent<Text>();
             playerCameraGameobject = FindFirstObjectByType<Camera>();
         }
     }
@@ -104,36 +116,36 @@ public class GameManager : MonoBehaviour
             else if (lowestDistanceEnemy >= lvlTresholds[3]) lvlChoosen = 2;
             else if (lowestDistanceEnemy <= lvlTresholds[4]) lvlChoosen = 1;
 
-            int totalSoundInfluence = soundLvlFromPlayer + button_1 + button_2 + button_3;
+            int totalSoundInfluence = soundLvlFromPlayer + button_1 + button_2 + button_3 + talkingPeople;
 
             switch (lvlChoosen)
             {
                 case 1:
-                    if (totalSoundInfluence >= 0 || pot_Speed_Value >= 50)
+                    if (totalSoundInfluence >= 1 || pot_Speed_Value_Converted >= potLvlTresholds[0])
                     {
                         LoadLoastScene();
                     }
                     break;
                 case 2:
-                    if (totalSoundInfluence >= 1 || pot_Speed_Value >= 100)
+                    if (totalSoundInfluence >= 2 || pot_Speed_Value_Converted >= potLvlTresholds[1])
                     {
                         LoadLoastScene();
                     }
                     break;
                 case 3:
-                    if (totalSoundInfluence >= 2 || pot_Speed_Value >= 250)
+                    if (totalSoundInfluence >= 3 || pot_Speed_Value_Converted >= potLvlTresholds[2])
                     {
                         LoadLoastScene();
                     }
                     break;
                 case 4:
-                    if (totalSoundInfluence >= 3 || pot_Speed_Value >= 500)
+                    if (totalSoundInfluence >= 4 || pot_Speed_Value_Converted >= potLvlTresholds[3])
                     {
                         LoadLoastScene();
                     }
                     break;
                 case 5:
-                    if (totalSoundInfluence >= 4 || pot_Speed_Value >= 1000)
+                    if (totalSoundInfluence >= 5 || pot_Speed_Value_Converted >= potLvlTresholds[4])
                     {
                         LoadLoastScene();
                     }
@@ -173,16 +185,83 @@ public class GameManager : MonoBehaviour
         }
     }
 
+   public void SetSpeedSlider()
+{
+    speedSlider.value = pot_Speed_Value_Converted;
+    speedSliderText.text = "Speed: " + speedSlider.value;
+
+    Color sliderColor = GetSpeedColor(pot_Speed_Value_Converted);
+    speedSlider.fillRect.GetComponent<Image>().color = sliderColor;
+}
+
+private Color GetSpeedColor(int speedValue)
+{
+    if (speedValue >= potLvlTresholds[4])
+    {
+        return Color.red; // High speed
+    }
+    else if (speedValue >= potLvlTresholds[3])
+    {
+        return new Color(1f, 0.647f, 0f);//orange
+    }
+    else if (speedValue >= potLvlTresholds[2])
+    {
+        return Color.yellow; // Medium speed
+    }
+    else if (speedValue >= potLvlTresholds[1])
+    {
+        return Color.green; // Low speed
+    }
+    else
+    {
+        return Color.cyan; // Very low speed
+    }
+}
+    public void ConvertPotValue()
+    {
+        pot_Speed_Value_Converted = (pot_Speed_Value * 6) / 1023;
+        Debug.Log("Pot Speed Value Section: " + pot_Speed_Value_Converted);
+
+
+        if (pot_Speed_Value_Converted == 0)
+        {
+
+        }
+        else if (pot_Speed_Value_Converted == 1)
+        {
+
+        }
+        else if (pot_Speed_Value_Converted == 2)
+        {
+
+        }
+        else if (pot_Speed_Value_Converted == 3)
+        {
+
+        }
+        else if (pot_Speed_Value_Converted == 4)
+        {
+
+        }
+        else if (pot_Speed_Value_Converted == 5)
+        {
+
+        }
+    }
+
+
     private void Update()
     {
         if (SceneManager.GetActiveScene().name == "MainScene")
         {
             CheckIfLoss();
             CheckIfWin();
+            ConvertPotValue();
+            SetSpeedSlider();
+
         }
 
         ChangeScene();
-
         BackgroundMusic();
     }
 }
