@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
+    [HideInInspector]
     public Uboat uboat;
 
     public float lowestDistanceEnemy = float.PositiveInfinity;
