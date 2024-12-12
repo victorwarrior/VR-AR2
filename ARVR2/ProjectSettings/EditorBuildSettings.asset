@@ -8,5 +8,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/MainScene.unity
     guid: a33d213a13725484c8178bfe7c6610b1
+  - enabled: 1
+    path: Assets/LostScene.unity
+    guid: c0dfaa0497d54ba4aab8e6a635c4dd9a
   m_configObjects:
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: ccdc360e5c3605c4ca93408cf7de7706, type: 2}

@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class EnemySpawner : MonoBehaviour
 {
@@ -18,19 +19,28 @@ public class EnemySpawner : MonoBehaviour
 
     private void Start()
     {
-        spawnTimer = spawnInterval;
+        if (SceneManager.GetActiveScene().name == "MainScene")
+        {
+            SpawnEnemyShip();
+            spawnTimer = spawnInterval;
+        }
+            
     }
 
     private void Update()
     {
-        spawnTimer -= Time.deltaTime;
-
-        // Spawn a new enemy ship when the timer reaches zero
-        if (spawnTimer <= 0f)
+        if(SceneManager.GetActiveScene().name == "MainScene")
         {
-            SpawnEnemyShip();
-            spawnTimer = spawnInterval; // Reset timer
+            spawnTimer -= Time.deltaTime;
+
+            // Spawn a new enemy ship when the timer reaches zero
+            if (spawnTimer <= 0f)
+            {
+                SpawnEnemyShip();
+                spawnTimer = spawnInterval; // Reset timer
+            }
         }
+
     }
 
     private void SpawnEnemyShip()

@@ -160,12 +160,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 18475277}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.7175684, y: 5.4310856, z: 2.9601684}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 16.386662, y: -48.36891, z: 13.346493}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1783873763}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &29123038
 PrefabInstance:
@@ -5423,14 +5423,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyShipPrefab: {fileID: 3950886106708841227, guid: d406453c71522ae478d30b77aa44f8f8, type: 3}
-  spawnInterval: 10
-  minSpawnZ: 80
-  maxSpawnDistance: 100
+  spawnInterval: 25
+  minSpawnZ: 125
+  maxSpawnDistance: 150
   player: {fileID: 560837292}
   offsetRange: 10
   spawnAngleRange: 90
   waterHeight: 10
-  minSpawnDistanceBetweenShips: 20
+  minSpawnDistanceBetweenShips: 50
 --- !u!4 &266434745
 Transform:
   m_ObjectHideFlags: 0
@@ -6798,6 +6798,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bc5f48af2cffd747a079fe8c632e2c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &341397941 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 405068, guid: a65acf0cbf56b80419f74ebf0bc845f4, type: 3}
+  m_PrefabInstance: {fileID: 1106876199}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &440340578 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4509519330343300, guid: 2a2c3e7c382eb674a93229b4f0a5d45b, type: 3}
@@ -9303,7 +9308,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 1783873763}
     m_Modifications:
     - target: {fileID: 128384, guid: a65acf0cbf56b80419f74ebf0bc845f4, type: 3}
       propertyPath: m_Name
@@ -9311,15 +9316,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 405068, guid: a65acf0cbf56b80419f74ebf0bc845f4, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 22.10423
       objectReference: {fileID: 0}
     - target: {fileID: 405068, guid: a65acf0cbf56b80419f74ebf0bc845f4, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -53.8
       objectReference: {fileID: 0}
     - target: {fileID: 405068, guid: a65acf0cbf56b80419f74ebf0bc845f4, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 10.386324
       objectReference: {fileID: 0}
     - target: {fileID: 405068, guid: a65acf0cbf56b80419f74ebf0bc845f4, type: 3}
       propertyPath: m_LocalRotation.w
@@ -9327,15 +9332,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 405068, guid: a65acf0cbf56b80419f74ebf0bc845f4, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 405068, guid: a65acf0cbf56b80419f74ebf0bc845f4, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 405068, guid: a65acf0cbf56b80419f74ebf0bc845f4, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 405068, guid: a65acf0cbf56b80419f74ebf0bc845f4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -11205,11 +11210,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lowestDistanceEnemy: Infinity
   soundLvlFromPlayer: 0
-  playerCameraGameobject: {fileID: 272612727}
+  playerCameraGameobject: {fileID: 272612731}
   pot_Speed_Value: 0
   button_1: 0
   button_2: 0
   button_3: 0
+  lvlTresholds: 640000004b00000032000000190000000a000000
 --- !u!4 &1783873763
 Transform:
   m_ObjectHideFlags: 0
@@ -11224,6 +11230,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 266434745}
+  - {fileID: 341397941}
+  - {fileID: 18475279}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &1783873764
@@ -12064,6 +12072,4 @@ SceneRoots:
   - {fileID: 639400720}
   - {fileID: 1444328379}
   - {fileID: 1177883478}
-  - {fileID: 1106876199}
-  - {fileID: 18475279}
   - {fileID: 1368818755}

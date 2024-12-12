@@ -26,28 +26,32 @@ public class TalkingPeople : MonoBehaviour
 
     void Update()
     {
-
-
-        // Check for player input (example: Space key)
-        float yRotation = GameManager.Instance.playerCameraGameobject.transform.eulerAngles.y;
-
-        if (yRotation > 180f)
+        if (GameManager.Instance.playerCameraGameobject != null)
         {
-            yRotation -= 360f;
+            float yRotation = GameManager.Instance.playerCameraGameobject.gameObject.transform.eulerAngles.y;
+            if (yRotation > 180f)
+            {
+                yRotation -= 360f;
+            }
+
+            if (GameManager.Instance.soundLvlFromPlayer == 1 && yRotation <= -140f && yRotation >= -220f)
+            {
+                //Ændre til SHHHHH fra player
+                GoIdle();
+                if (shush.isPlaying == false) shush.Play();
+            }
+
+            if (playerForcedIdle == true && whispers.volume > 0.0f)
+            {
+                whispers.volume -= volumeDecay;
+            }
+            else if (playerForcedIdle == false && whispers.volume < 1.0f)
+            {
+                whispers.volume += volumeDecay;
+            }
         }
 
-        if (GameManager.Instance.soundLvlFromPlayer == 1 && yRotation <= -140f && yRotation >= -220f)
-        {
-            //Ændre til SHHHHH fra player
-            GoIdle();
-            if (shush.isPlaying == false) shush.Play();
-        }
-
-        if (playerForcedIdle == true && whispers.volume > 0.0f) {
-            whispers.volume -= volumeDecay;
-        } else if (playerForcedIdle == false && whispers.volume < 1.0f) {
-            whispers.volume += volumeDecay;
-        }
+        
     }
 
     // Function to be called when the player forces the character to idle
