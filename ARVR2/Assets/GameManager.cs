@@ -1,7 +1,5 @@
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.XR;
 using UnityEngine.SceneManagement;
+using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
@@ -20,9 +18,12 @@ public class GameManager : MonoBehaviour
     public int button_2;
     public int button_3;
 
-    public int[] lvlTresholds = {100, 75,50,25,10};
+    public int[] lvlTresholds = { 100, 75, 50, 25, 10 };
     public int lvlWinRange = 100;
 
+    public AudioSource backgroundMusic;
+
+    private bool sceneChangeRequested = false;
 
     private void OnEnable()
     {
@@ -36,6 +37,11 @@ public class GameManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        // Reset the scene change flag when a new scene is loaded
+        if (scene.name == "LostScene" || scene.name == "WinScene")
+        {
+            sceneChangeRequested = false;
+        }
 
         if (scene.name == "MainScene")
         {
@@ -59,6 +65,7 @@ public class GameManager : MonoBehaviour
     private int previousButton1State;
     private int previousButton2State;
     private int previousButton3State;
+
     private bool DetectButtonStateChange()
     {
         if (button_1 != previousButton1State || button_2 != previousButton2State || button_3 != previousButton3State)
@@ -67,97 +74,115 @@ public class GameManager : MonoBehaviour
             previousButton2State = button_2;
             previousButton3State = button_3;
 
-            return true; 
+            return true;
         }
 
-        return false; 
+        return false;
     }
 
-
-    private void Update()
+    public void ChangeScene()
     {
-        if (SceneManager.GetActiveScene().name == "LostScene" || SceneManager.GetActiveScene().name == "WinScene")
+        if (DetectButtonStateChange())
         {
-            if (DetectButtonStateChange() == true)
+            // Allow the scene change only if we're in a "Win" or "Lost" scene
+            if (SceneManager.GetActiveScene().name == "LostScene" || SceneManager.GetActiveScene().name == "WinScene")
             {
                 SceneManager.LoadScene("MainScene");
             }
         }
+    }
 
+    public void CheckIfLoss()
+    {
         if (SceneManager.GetActiveScene().name == "MainScene")
         {
-
             int lvlChoosen = 0;
 
-
-            if (lowestDistanceEnemy >= lvlTresholds[0])
-            {
-                lvlChoosen = 5;
-            }
-            else if (lowestDistanceEnemy >= lvlTresholds[1])
-            {
-                lvlChoosen = 4;
-            }
-            else if (lowestDistanceEnemy >= lvlTresholds[2])
-            {
-                lvlChoosen = 3;
-            }
-            else if (lowestDistanceEnemy >= lvlTresholds[3])
-            {
-                lvlChoosen = 2;
-            }
-            else if (lowestDistanceEnemy <= lvlTresholds[4])
-            {
-                lvlChoosen = 1;
-            }
+            if (lowestDistanceEnemy >= lvlTresholds[0]) lvlChoosen = 5;
+            else if (lowestDistanceEnemy >= lvlTresholds[1]) lvlChoosen = 4;
+            else if (lowestDistanceEnemy >= lvlTresholds[2]) lvlChoosen = 3;
+            else if (lowestDistanceEnemy >= lvlTresholds[3]) lvlChoosen = 2;
+            else if (lowestDistanceEnemy <= lvlTresholds[4]) lvlChoosen = 1;
 
             int totalSoundInfluence = soundLvlFromPlayer + button_1 + button_2 + button_3;
-
 
             switch (lvlChoosen)
             {
                 case 1:
                     if (totalSoundInfluence >= 0 || pot_Speed_Value >= 50)
                     {
-                        SceneManager.LoadScene("LostScene");
+                        LoadLoastScene();
                     }
                     break;
                 case 2:
                     if (totalSoundInfluence >= 1 || pot_Speed_Value >= 100)
                     {
-                        SceneManager.LoadScene("LostScene");
+                        LoadLoastScene();
                     }
                     break;
                 case 3:
                     if (totalSoundInfluence >= 2 || pot_Speed_Value >= 250)
                     {
-                        SceneManager.LoadScene("LostScene");
+                        LoadLoastScene();
                     }
                     break;
                 case 4:
                     if (totalSoundInfluence >= 3 || pot_Speed_Value >= 500)
                     {
-                        SceneManager.LoadScene("LostScene");
+                        LoadLoastScene();
                     }
                     break;
                 case 5:
                     if (totalSoundInfluence >= 4 || pot_Speed_Value >= 1000)
                     {
-                        SceneManager.LoadScene("LostScene");
+                        LoadLoastScene();
                     }
                     break;
                 default:
                     break;
             }
         }
-
-        if(uboat.gameObject.transform.position.z >= lvlWinRange)
-        {
-            SceneManager.LoadScene("WinScene");
-        }
-
-
     }
 
+    public void LoadLoastScene()
+    {
+        if (SceneManager.GetActiveScene().name != "LostScene")
+        {
+            SceneManager.LoadScene("LostScene");
+        }
+    }
 
+    public void CheckIfWin()
+    {
+        if (uboat.gameObject.transform.position.z >= lvlWinRange && uboat.radio.slider.value == uboat.radio.slider.maxValue && !sceneChangeRequested)
+        {
+            sceneChangeRequested = true; // Prevent multiple scene loads
+            SceneManager.LoadScene("WinScene");
+        }
+    }
+
+    public void BackgroundMusic()
+    {
+        if (backgroundMusic != null)
+        {
+            backgroundMusic.loop = true;
+            if (!backgroundMusic.isPlaying)
+            {
+                backgroundMusic.Play();
+            }
+        }
+    }
+
+    private void Update()
+    {
+        if (SceneManager.GetActiveScene().name == "MainScene")
+        {
+            CheckIfLoss();
+            CheckIfWin();
+        }
+
+        ChangeScene();
+
+        BackgroundMusic();
+    }
 }

@@ -9,6 +9,8 @@ public class Uboat : MonoBehaviour
     public GameObject radar;
     public GameObject uBoat;
 
+    public Radio radio;
+
 
     private void Update()
     {
@@ -67,13 +69,16 @@ public class Uboat : MonoBehaviour
                 if (!radioAudio.isPlaying) // Check if the audio is already playing
                 {
                     radioAudio.Play();
+                    radio.StartCoroutine(radio.IncreaseSliderOverTime());
                 }
             }
             else if (state == 0)
             {
-                if (radioAudio.isPlaying) // Optional: Check if the audio is playing before pausing
+                if (radioAudio.isPlaying) 
                 {
                     radioAudio.Pause();
+                    radio.StopCoroutine(radio.IncreaseSliderOverTime()); 
+
                 }
             }
         }
