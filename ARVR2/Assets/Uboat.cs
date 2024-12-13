@@ -17,6 +17,13 @@ public class Uboat : MonoBehaviour
     private float speedSmoothTime = 0.5f; // Smooth transition time for speed
     private float velocity = 0f; // Used for smoothing
 
+    public AudioSource engineAudio; 
+    private float targetVolume = 0f;
+    public float maxVolume = 1.0f; // Max volume of the sound
+    public float fadeSpeed = 1.0f; // How fast the volume fades in/out
+
+
+
     private void Update()
     {
         if (GameManager.Instance.button_1 == 1)
@@ -46,6 +53,7 @@ public class Uboat : MonoBehaviour
             TurnOffOnRadar(0);
         }
 
+        UboatAudio();
         MoveFowardUboat(GameManager.Instance.pot_Speed_Value_Converted);
     }
 
@@ -118,4 +126,40 @@ public class Uboat : MonoBehaviour
         uBoat.transform.Translate(Vector3.forward * currentSpeed * Time.deltaTime);
     }
 
+
+    public void UboatAudio()
+    {
+        currentSpeed = GetSpeed(); // Get the current speed of the car
+
+        float[] volumeLevels = { 0f, 0.2f, 0.4f, 0.6f, 0.8f, 1.0f };
+
+        targetVolume = 0f;
+
+        for (int i = 0; i < GameManager.Instance.potLvlTresholds.Length; i++)
+        {
+            if (currentSpeed < GameManager.Instance.potLvlTresholds[i])
+            {
+                targetVolume = volumeLevels[i]; 
+                break; 
+            }
+        }
+
+        if (targetVolume > 0 && !engineAudio.isPlaying)
+        {
+            engineAudio.Play();
+        }
+        else if (targetVolume <= 0 && engineAudio.isPlaying)
+        {
+            engineAudio.Stop();
+        }
+
+        engineAudio.volume = Mathf.MoveTowards(engineAudio.volume, targetVolume, fadeSpeed * Time.deltaTime);
+    }
+
+    private float GetSpeed()
+    {
+        return GameManager.Instance.pot_Speed_Value_Converted; 
+    }
+
 }
+

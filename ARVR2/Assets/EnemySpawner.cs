@@ -22,8 +22,10 @@ public class EnemySpawner : MonoBehaviour
         if (SceneManager.GetActiveScene().name == "MainScene")
         {
             spawnTimer = spawnInterval;
+            SpawnEnemyShip();
+
         }
-            
+
     }
 
     private void Update()
