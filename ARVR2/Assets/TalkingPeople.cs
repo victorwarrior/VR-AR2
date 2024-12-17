@@ -3,28 +3,36 @@ using UnityEngine;
 
 public class TalkingPeople : MonoBehaviour
 {
+    //animator til personerne
     private Animator animator;
+    //hvor langt tid der skal gå fra idle til talking
     public float delayBetweenTalking = 30;
+
+    //lyd sources
     public AudioSource whispers;
     public AudioSource shush;
 
-    private bool playerForcedIdle = false; // Tracks if the player has forced the character to idle
+    //bruges til personer der taller når de skal være idle
+    private bool playerForcedIdle = false; 
+    //lyd neivau
     private float volumeDecay = 0.002f;
 
     void Start()
     {
-        // Get the Animator component attached to the GameObject
+        //Animator
         animator = GetComponent<Animator>();
         
-        // Start the character in the talking state
+        // Start talking state
         animator.SetBool("Talking", true);
         
+        //starter lyden
         whispers.Play();
         whispers.loop = true;
     }
 
     void Update()
     {
+        //plan om at man skulle bruge camera fra spilleren til at se om man sagde shhh mens man så på dem
         if (GameManager.Instance.playerCameraGameobject != null)
         {
             float yRotation = GameManager.Instance.playerCameraGameobject.gameObject.transform.eulerAngles.y;
@@ -33,13 +41,14 @@ public class TalkingPeople : MonoBehaviour
                 yRotation -= 360f;
             }
 
+            //bruges til at check om man har sagt shhh
             if (GameManager.Instance.soundLvlFromPlayer == 1) //&& yRotation <= -140f && yRotation >= -220f
             {
                 //Ændre til SHHHHH fra player
                 GoIdle();
                 if (shush.isPlaying == false) shush.Play();
             }
-
+            //gør fade på volume enten op eller ned
             if (playerForcedIdle == true && whispers.volume > 0.0f)
             {
                 whispers.volume -= volumeDecay;
@@ -53,7 +62,7 @@ public class TalkingPeople : MonoBehaviour
         
     }
 
-    // Function to be called when the player forces the character to idle
+    //Når man siger shhh bliver de tvunget stille
     public void GoIdle()
     {
         if (!playerForcedIdle)
@@ -67,13 +76,13 @@ public class TalkingPeople : MonoBehaviour
         }
     }
 
-    // Coroutine to resume talking after a random delay
+    //Start talking efter lidt tid 30 sec ca
     private IEnumerator ResumeTalkingAfterDelay()
     {
-        // Wait for a random amount of time (20-30 seconds)
+
         yield return new WaitForSeconds(delayBetweenTalking);
 
-        // Resume talking state
+        //starter talking state igen
         GameManager.Instance.talkingPeople = 1;
         playerForcedIdle = false;
         animator.SetBool("Talking", true);

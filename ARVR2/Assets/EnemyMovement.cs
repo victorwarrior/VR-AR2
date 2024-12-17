@@ -1,24 +1,27 @@
 using UnityEngine;
 
+//krigskib script der styger deres movement
 public class EnemyMovement : MonoBehaviour
 {
-    public float speed = 5f;          // Speed of the enemy ship
-    public float waterHeight = 0f;    // The height of the water surface
+    //hastighed og lengde/dybte på vandet
+    public float speed = 5f;          
+    public float waterHeight = 0f;    
 
-    private Vector3 moveDirection;    // Direction the ship will move toward
+    //spillerens position
+    private Vector3 moveDirection;   
 
     private void Update()
     {
-        // Ensure the ship stays at the water height
+        //så den forbliver på vand overfladen
         Vector3 currentPosition = transform.position;
-        currentPosition.y = waterHeight;  // Keep the ship on the water surface
+        currentPosition.y = waterHeight;  
         transform.position = currentPosition;
 
-        // Move the ship toward the player (no change to the Y-coordinate)
+        // bevæger sig mod spilleren
         transform.position += moveDirection * speed * Time.deltaTime;
     }
 
-    // Set the movement direction for the ship
+    //en anden klasse kaldet EnemySpawner kalder funktion når et skib bliver spawned ind og setter dens kurs 
     public void SetDirection(Vector3 direction)
     {
         moveDirection = direction;

@@ -5,48 +5,65 @@ using static System.Collections.Specialized.BitVector32;
 
 public class GameManager : MonoBehaviour
 {
+    //refrence til gamemanager til singelton
     public static GameManager Instance { get; private set; }
-
+    
+    //refrence til andre scripts uboat og spawner af enemy
     [HideInInspector]
     public Uboat uboat;
     public EnemySpawner spawner;
 
+    //den nærmeste enemy som stater på infinity som er længst væk
     public float lowestDistanceEnemy = float.PositiveInfinity;
 
+    //lyd fra sensor mikrofon
     public int soundLvlFromPlayer;
+    //bliver ikke brugt men ref til cam
     public Camera playerCameraGameobject;
-
+    //pot value til hastighed
     public int pot_Speed_Value;
+    //converter værdi til mindre stadier
     public int pot_Speed_Value_Converted;
+    //ref til speed slider
     private Slider speedSlider;
+    //ref til slider text
     private Text speedSliderText;
 
+    //knappe værdier
     public int button_1;
     public int button_2;
     public int button_3;
+    //værdi fra talkingpeople
     public int talkingPeople;
 
+    //hvor langt man skal være fra nærmeste ship for at skifte lvls
     public int[] lvlTresholds = { 100, 75, 50, 25, 10 };
+    //de forskelige lvls på pot hastighed
     public int[] potLvlTresholds = { 1, 2, 3, 4, 5};
+    //hvor langt man skal sejle for at vinde
     public int lvlWinRange = 100;
 
+    //bagrundslyd
     public AudioSource backgroundMusic;
 
+    //når man skal skifte scene
     private bool sceneChangeRequested = false;
 
+    //gemmer scenen
     private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
-
+    //fjerner scenen
     private void OnDisable()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
+    //når scenen loader
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // Reset the scene change flag when a new scene is loaded
+        // Reset scene
         if (scene.name == "LostScene" || scene.name == "WinScene")
         {
             sceneChangeRequested = false;
@@ -64,7 +81,7 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        // Ensure singleton pattern
+        //singleton pattern
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -74,10 +91,12 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    //gemer sidste værdi til at se om man vil restart 
     private int previousButton1State;
     private int previousButton2State;
     private int previousButton3State;
 
+    //når man trykker på en random knap restarter scenen
     private bool DetectButtonStateChange()
     {
         if (button_1 != previousButton1State || button_2 != previousButton2State || button_3 != previousButton3State)
@@ -92,11 +111,11 @@ public class GameManager : MonoBehaviour
         return false;
     }
 
+    //skifter scene tilbage til main 
     public void ChangeScene()
     {
         if (DetectButtonStateChange())
         {
-            // Allow the scene change only if we're in a "Win" or "Lost" scene
             if (SceneManager.GetActiveScene().name == "LostScene" || SceneManager.GetActiveScene().name == "WinScene")
             {
                 SceneManager.LoadScene("MainScene");
@@ -104,6 +123,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    //checker om man har tabt
     public void CheckIfLoss()
     {
         if (SceneManager.GetActiveScene().name == "MainScene")
@@ -156,6 +176,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    //loader loss scene
     public void LoadLoastScene()
     {
         if (SceneManager.GetActiveScene().name != "LostScene")
@@ -164,15 +185,17 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    //check om man har vundet
     public void CheckIfWin()
     {
         if (uboat.gameObject.transform.position.z >= lvlWinRange && uboat.radio.slider.value == uboat.radio.slider.maxValue && !sceneChangeRequested)
         {
-            sceneChangeRequested = true; // Prevent multiple scene loads
+            sceneChangeRequested = true; // forhindre flere scene loads
             SceneManager.LoadScene("WinScene");
         }
     }
 
+    //bagrunds musik
     public void BackgroundMusic()
     {
         if (backgroundMusic != null)
@@ -185,6 +208,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    //setter hastighed slider
    public void SetSpeedSlider()
 {
     speedSlider.value = pot_Speed_Value_Converted;
@@ -194,6 +218,7 @@ public class GameManager : MonoBehaviour
     speedSlider.fillRect.GetComponent<Image>().color = sliderColor;
 }
 
+    //setter farven baseret på hastighed
 private Color GetSpeedColor(int speedValue)
 {
     if (speedValue >= potLvlTresholds[4])
@@ -217,6 +242,7 @@ private Color GetSpeedColor(int speedValue)
         return Color.cyan; // Very low speed
     }
 }
+    //ændre pot værdi til 6 stadier
     public void ConvertPotValue()
     {
         pot_Speed_Value_Converted = (pot_Speed_Value * 6) / 1023;
@@ -249,7 +275,7 @@ private Color GetSpeedColor(int speedValue)
         }
     }
 
-
+    //køre updates på om har tabt, vundet, ændre pot værdi og set speed slider
     private void Update()
     {
         if (SceneManager.GetActiveScene().name == "MainScene")
@@ -260,7 +286,7 @@ private Color GetSpeedColor(int speedValue)
             SetSpeedSlider();
 
         }
-
+        //change scene og bagrundsmusik
         ChangeScene();
         BackgroundMusic();
     }

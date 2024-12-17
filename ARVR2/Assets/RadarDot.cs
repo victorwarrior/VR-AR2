@@ -1,13 +1,17 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+//klasse til at visulisere en prik på raderen hvor der er en båd
 public class RadarDot : MonoBehaviour
 {
+    //billed til radar dot
     private Image dotImage;
+    //Bruges til fade effect
     private bool isFading = false;
     public float fadeDuration = 1.0f; // Duration of the fade effect (in seconds)
     private float currentFadeTime;
 
+    //tager dens image
     void Awake()
     {
         dotImage = GetComponent<Image>();
@@ -15,11 +19,13 @@ public class RadarDot : MonoBehaviour
             Debug.LogError("RadarDot requires an Image component.");
     }
 
+    //laver dot
     public void InitializeDot()
     {
         SetAlpha(0f); // Initialize with alpha 0 so it's invisible
     }
 
+    //Den er blevet ramt af swiper og skal få farve og fade
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Sweeper"))
@@ -31,6 +37,7 @@ public class RadarDot : MonoBehaviour
         }
     }
 
+    //den begynder at fade
     void Update()
     {
         if (isFading)
@@ -50,6 +57,7 @@ public class RadarDot : MonoBehaviour
         }
     }
 
+    //den bliver synlig
     private void SetAlpha(float alpha)
     {
         if (dotImage != null)
