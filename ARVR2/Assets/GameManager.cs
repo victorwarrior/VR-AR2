@@ -223,23 +223,23 @@ private Color GetSpeedColor(int speedValue)
 {
     if (speedValue >= potLvlTresholds[4])
     {
-        return Color.red; // High speed
+        return Color.red; // High
     }
     else if (speedValue >= potLvlTresholds[3])
     {
-        return new Color(1f, 0.647f, 0f);//orange
+        return new Color(1f, 0.647f, 0f);
     }
     else if (speedValue >= potLvlTresholds[2])
     {
-        return Color.yellow; // Medium speed
+        return Color.yellow; // Medium
     }
     else if (speedValue >= potLvlTresholds[1])
     {
-        return Color.green; // Low speed
+        return Color.green; 
     }
     else
     {
-        return Color.cyan; // Very low speed
+        return Color.cyan; //low
     }
 }
     //ændre pot værdi til 6 stadier
